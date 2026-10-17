@@ -1,0 +1,386 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Naya's Wingstop 30-60-90</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: an e-learning course shell. Green masthead band, sticky module rail, one module visible at a time, heat meter as progress. */
+:root{
+  --bg:#F3F6F2;
+  --surface:#FFFFFF;
+  --ink:#121613;
+  --muted:#4E5A52;
+  --line:#D5DED7;
+  --green:#146A34;
+  --green-deep:#0C4421;
+  --on-green:#FFFFFF;
+  --heat:#C8451D;
+  --heat-soft:#F6DED4;
+  --good:#146A34;
+  --good-soft:#DDEEE2;
+  --bad:#A8321A;
+  --bad-soft:#F6DED4;
+  --display:"Anton","Impact","Arial Narrow",sans-serif;
+  --body:"Barlow","Segoe UI",Helvetica,Arial,sans-serif;
+  --cond:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1310;--surface:#161D18;--ink:#EEF3EF;--muted:#A3B2A8;--line:#2A362E;
+  --green:#2E9A55;--green-deep:#0F3A1F;--on-green:#FFFFFF;--heat:#F07A4E;--heat-soft:#3A2018;
+  --good:#5CC983;--good-soft:#173322;--bad:#F08A6A;--bad-soft:#3A2018;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1310;--surface:#161D18;--ink:#EEF3EF;--muted:#A3B2A8;--line:#2A362E;
+  --green:#2E9A55;--green-deep:#0F3A1F;--on-green:#FFFFFF;--heat:#F07A4E;--heat-soft:#3A2018;
+  --good:#5CC983;--good-soft:#173322;--bad:#F08A6A;--bad-soft:#3A2018;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--green-deep)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--cond);font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase}
+
+/* Masthead */
+.mast{background:var(--green-deep);color:var(--on-green)}
+.mast .wrap{padding-block:36px 28px;display:grid;gap:14px}
+.mast h1{font-family:var(--display);font-weight:400;font-size:clamp(2.4rem,7vw,4.6rem);line-height:.95;letter-spacing:.01em;text-transform:uppercase}
+.mast h1 span{color:var(--heat-soft)}
+.mast p{margin:0;max-width:62ch;opacity:.92;font-size:1.05rem}
+.mast .meta{font-family:var(--cond);font-size:1rem;letter-spacing:.04em;opacity:.85}
+
+/* Rail */
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.rail .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding-block:10px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{font-family:var(--cond);font-weight:600;font-size:.95rem;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);background:transparent;color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-current="true"]{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.tab.done:not([aria-current="true"]){color:var(--green);border-color:var(--green)}
+.tab:focus-visible,.btn:focus-visible,.choice:focus-visible,.flip:focus-visible,.phase-btn:focus-visible{outline:3px solid var(--heat);outline-offset:2px}
+.heat{flex:1;min-width:140px;display:flex;align-items:center;gap:10px}
+.meter{flex:1;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:20%;background:linear-gradient(90deg,var(--green),var(--heat));transition:width .4s ease}
+.heat .eyebrow{color:var(--muted);white-space:nowrap}
+
+main .wrap{padding-block:32px 56px}
+section.mod{display:grid;gap:22px}
+.mod-head{display:grid;gap:6px}
+.mod-head .eyebrow{color:var(--heat)}
+.mod-head h2{font-family:var(--display);font-weight:400;font-size:clamp(1.9rem,4.5vw,2.8rem);text-transform:uppercase;line-height:1}
+.mod-head p{margin:0;color:var(--muted);max-width:66ch}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:4px;align-content:start}
+.stat b{font-family:var(--display);font-weight:400;font-size:2.3rem;line-height:1;color:var(--green);font-variant-numeric:tabular-nums}
+.stat span{font-size:.95rem}
+.stat em{font-style:normal;color:var(--muted);font-size:.85rem}
+.takeaway{background:var(--green);color:var(--on-green);border-radius:10px;padding:18px 20px;display:grid;gap:6px}
+.takeaway p{margin:0;max-width:72ch}
+
+/* Flip cards */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.flip{position:relative;min-height:210px;border:0;padding:0;background:none;cursor:pointer;perspective:900px;text-align:left;font:inherit;color:inherit}
+.flip .in{position:absolute;inset:0;transition:transform .55s ease;transform-style:preserve-3d}
+.flip[aria-pressed="true"] .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;padding:18px;display:grid;align-content:space-between;gap:10px}
+.front{background:var(--surface);border:1px solid var(--line)}
+.front h3{font-family:var(--display);font-weight:400;font-size:1.9rem;text-transform:uppercase;color:var(--green);line-height:1}
+.front .hint{font-family:var(--cond);font-size:.9rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.back{background:var(--green);color:var(--on-green);transform:rotateY(180deg);font-size:.95rem}
+.back strong{font-family:var(--cond);letter-spacing:.06em;text-transform:uppercase;font-size:.85rem;opacity:.85}
+
+/* Phases */
+.phase-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.phase-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:14px;cursor:pointer;text-align:left;display:grid;gap:2px;font:inherit}
+.phase-btn b{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1}
+.phase-btn span{font-family:var(--cond);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.9rem;color:var(--muted)}
+.phase-btn .pep{display:flex;gap:3px;margin-top:4px}
+.phase-btn .pep i{width:14px;height:6px;border-radius:3px;background:var(--line)}
+.phase-btn .pep i.on{background:var(--heat)}
+.phase-btn[aria-selected="true"]{border-color:var(--green);box-shadow:inset 0 0 0 2px var(--green)}
+.phase-btn[aria-selected="true"] b{color:var(--green)}
+.phase{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:12px;align-content:start;min-width:0}
+.panel h3{font-family:var(--cond);font-weight:700;font-size:1.25rem;text-transform:uppercase;letter-spacing:.04em}
+.theme-line{font-size:1.1rem;font-weight:600;margin:0}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checks label{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;cursor:pointer}
+.checks input{width:18px;height:18px;margin-top:3px;accent-color:var(--green)}
+.checks input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--green)}
+.kpis{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.kpis li{display:grid;grid-template-columns:1fr auto;gap:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);font-size:.95rem}
+.kpis li b{font-family:var(--cond);font-size:1.05rem;color:var(--green);font-variant-numeric:tabular-nums;white-space:nowrap}
+.deliv{font-size:.95rem;margin:0;padding-left:18px;display:grid;gap:4px}
+.who{font-size:.9rem;color:var(--muted);margin:0}
+
+/* Scenario */
+.scene{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:14px}
+.scene .q{font-size:1.15rem;font-weight:600;margin:0;max-width:70ch}
+.choices{display:grid;gap:10px}
+.choice{text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:12px 14px;cursor:pointer;font:inherit;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.choice .k{font-family:var(--display);font-size:1.3rem;line-height:1;color:var(--muted)}
+.choice.right{border-color:var(--good);background:var(--good-soft)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{border-radius:8px;padding:12px 14px;margin:0}
+.fb.good{background:var(--good-soft);border-left:4px solid var(--good)}
+.fb.meh{background:var(--bad-soft);border-left:4px solid var(--bad)}
+.score{font-family:var(--cond);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Why me */
+.why{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.proof{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.proof li{display:grid;grid-template-columns:86px 1fr;gap:12px;align-items:baseline}
+.proof b{font-family:var(--display);font-weight:400;font-size:1.7rem;color:var(--heat);line-height:1;font-variant-numeric:tabular-nums}
+.contact{display:grid;gap:10px}
+.contact .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.contact code{font-family:var(--cond);font-size:1.05rem;background:var(--bg);border:1px solid var(--line);padding:4px 8px;border-radius:6px;user-select:all;overflow-wrap:anywhere}
+
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{font-family:var(--cond);font-weight:700;font-size:1rem;letter-spacing:.06em;text-transform:uppercase;border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid var(--green);background:var(--green);color:var(--on-green)}
+.btn.ghost{background:transparent;color:var(--green)}
+.btn[disabled]{opacity:.35;cursor:default}
+a{color:var(--green)}
+.src{font-size:.8rem;color:var(--muted);margin:0}
+.src a{color:var(--muted)}
+
+@media (max-width:760px){
+  .phase,.why{grid-template-columns:1fr}
+  .phase-pick{grid-template-columns:1fr 1fr 1fr}
+  .phase-btn b{font-size:1.5rem}
+}
+@media (max-width:420px){
+  .phase-btn span{font-size:.75rem}
+  .proof li{grid-template-columns:70px 1fr}
+}
+@media (prefers-reduced-motion:reduce){.flip .in,.meter i{transition:none}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow">Senior Learning &amp; Development Manager · Interview course</div>
+    <h1>My first 90 days<br><span>at Wingstop</span></h1>
+    <p>A five-module walkthrough of how I'd lead the Content Development and LMS teams, where I'd focus first, and the results I'd measure. Built in the format I'd build for your restaurants: short, interactive, and tied to the numbers.</p>
+    <div class="meta">Naya Roquemore · About 6 minutes · Tap through in any order</div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Course modules">
+  <div class="wrap">
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="heat"><span class="eyebrow" id="heatLabel">Heat: Mild</span><div class="meter" aria-hidden="true"><i id="meter"></i></div></div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+
+    <!-- Module 1 -->
+    <section class="mod" data-mod="0" aria-labelledby="m1">
+      <div class="mod-head">
+        <div class="eyebrow">Module 1 · I did my homework</div>
+        <h2 id="m1">Where Wingstop stands right now</h2>
+        <p>Every training priority in this plan starts from these numbers. They come from Wingstop's fiscal Q2 2026 results (quarter ended June 27, 2026) and its 2026 strategy updates.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>3,255</b><span>restaurants system-wide</span><em>527 of them international</em></div>
+        <div class="stat"><b>16%</b><span>year-over-year unit growth</span><em>102 net new openings in Q2 alone</em></div>
+        <div class="stat"><b>2,300+</b><span>restaurants in the committed pipeline</span><em>Double-digit growth for years</em></div>
+        <div class="stat"><b>71.6%</b><span>of sales are digital</span><em>Crews run on systems, not just recipes</em></div>
+        <div class="stat"><b>~50%</b><span>of restaurants hitting the 10-minute Smart Kitchen target</span><em>The other half is a training opportunity</em></div>
+        <div class="stat"><b>−7.5%</b><span>domestic same store sales in Q2</span><em>Execution and frequency matter more than ever</em></div>
+      </div>
+      <div class="takeaway">
+        <div class="eyebrow">What this means for L&amp;D</div>
+        <p>Wingstop is opening restaurants faster than ever, in more countries, with new technology and a new loyalty program (Club Wingstop) launching nationally. Every new restaurant, Brand Partner, and market needs crews trained the same way, fast. That makes a scalable LMS, tight content governance, and localized content the engine behind the goal of becoming a Top 10 global restaurant brand.</p>
+      </div>
+      <p class="src">Sources: <a href="https://www.sec.gov/Archives/edgar/data/0001636222/000162828026050401/a991wingearningsreleasefin.htm" target="_blank" rel="noopener">Wingstop Q2 2026 earnings release (SEC)</a> · <a href="https://www.barchart.com/story/news/306923/wing-q4-deep-dive-smart-kitchen-rollout-and-loyalty-pilot-shape-2026-strategy" target="_blank" rel="noopener">Q4 2025 deep dive: Smart Kitchen and loyalty</a></p>
+    </section>
+
+    <!-- Module 2 -->
+    <section class="mod" data-mod="1" aria-labelledby="m2" hidden>
+      <div class="mod-head">
+        <div class="eyebrow">Module 2 · The Wingstop Way</div>
+        <h2 id="m2">How I'd lead by your values</h2>
+        <p>Wingstop's mission is to Serve the World Flavor, and its people live it through four values. Tap each card to see how I'd bring that value to the L&amp;D team.</p>
+      </div>
+      <div class="flips" id="flips"></div>
+      <div class="takeaway">
+        <div class="eyebrow">We all win together</div>
+        <p>My team's success is measured in the restaurants: faster ramp, stronger speed of service, and crews who feel ready on day one.</p>
+      </div>
+    </section>
+
+    <!-- Module 3 -->
+    <section class="mod" data-mod="2" aria-labelledby="m3" hidden>
+      <div class="mod-head">
+        <div class="eyebrow">Module 3 · The plan</div>
+        <h2 id="m3">30 · 60 · 90 days, heat rising</h2>
+        <p>Pick a phase. Check off actions as we talk through them. Targets are proposed and would be set with the Director of In-Restaurant Training after the first 30 days of listening.</p>
+      </div>
+      <div class="phase-pick" role="tablist" id="phasePick"></div>
+      <div id="phaseBody"></div>
+    </section>
+
+    <!-- Module 4 -->
+    <section class="mod" data-mod="3" aria-labelledby="m4" hidden>
+      <div class="mod-head">
+        <div class="eyebrow">Module 4 · Scenario practice</div>
+        <h2 id="m4">Make the call</h2>
+        <p>Three real situations this role could face. Pick the move you'd make, and see how I'd approach it.</p>
+      </div>
+      <div class="score" id="score">Score: 0 of 3</div>
+      <div id="scenes" style="display:grid;gap:14px"></div>
+    </section>
+
+    <!-- Module 5 -->
+    <section class="mod" data-mod="4" aria-labelledby="m5" hidden>
+      <div class="mod-head">
+        <div class="eyebrow">Module 5 · Why me</div>
+        <h2 id="m5">Results I'd bring to the kitchen</h2>
+        <p>I've already worked alongside Wingstop's training team, franchise operators, and field leaders as a contractor in 2026. Here's what I've delivered across restaurant, retail, and high-growth teams.</p>
+      </div>
+      <div class="why">
+        <div class="panel">
+          <h3>Proof points</h3>
+          <ul class="proof">
+            <li><b>22%</b><span>faster time to proficiency for 150+ new hires at Evolve</span></li>
+            <li><b>18%</b><span>lower attrition after rebuilding onboarding</span></li>
+            <li><b>21–30%</b><span>higher post-training scores for Wingstop managers and field leaders, reaching 95%</span></li>
+            <li><b>25%</b><span>faster course builds using AI-assisted content development at Wingstop</span></li>
+            <li><b>95–97%</b><span>completion rates with a 4.7/5 learner rating across 1,000+ employees</span></li>
+            <li><b>17%</b><span>faster ramp for 500+ associates at Kohl's Distribution Center</span></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>What you get</h3>
+          <ul class="deliv">
+            <li>A leader who has managed a 4–6 person learning team and directed contract designers and facilitators</li>
+            <li>Hands-on LMS administration across Cornerstone, Workday Learning, Docebo, and WorkRamp</li>
+            <li>Restaurant roots: Sonic Drive-In manager and multi-unit trainer, plus new store openings</li>
+            <li>Someone who already knows your store data, your Brand Partners, and your pace</li>
+          </ul>
+          <div class="contact">
+            <div class="eyebrow" style="color:var(--muted)">Let's talk</div>
+            <div class="row"><code id="email">Naya_roquemore@yahoo.com</code><button class="btn ghost" type="button" id="copyEmail">Copy email</button></div>
+            <div class="row"><code>478-302-6658</code></div>
+            <div class="row"><a href="https://naya022.github.io/" target="_blank" rel="noopener">View my portfolio</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav" style="margin-top:28px">
+      <button class="btn ghost" type="button" id="prev">Back</button>
+      <button class="btn" type="button" id="next">Next module</button>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  const MODS=["Homework","Values","30-60-90","Scenarios","Why me"];
+  const HEAT=["Mild","Medium","Hot","Hotter","Atomic-level ready"];
+  let cur=0; const seen=new Set([0]);
+  const tabs=document.getElementById('tabs');
+  const sections=[...document.querySelectorAll('section.mod')];
+  MODS.forEach((m,i)=>{const b=document.createElement('button');b.className='tab';b.type='button';b.role='tab';b.id='tab'+i;b.textContent=(i+1)+'. '+m;b.onclick=()=>go(i);tabs.appendChild(b)});
+  function go(i){
+    cur=Math.max(0,Math.min(MODS.length-1,i)); seen.add(cur);
+    sections.forEach((s,k)=>s.hidden=k!==cur);
+    [...tabs.children].forEach((t,k)=>{t.setAttribute('aria-current',k===cur?'true':'false');t.classList.toggle('done',seen.has(k))});
+    document.getElementById('meter').style.width=((seen.size)/MODS.length*100)+'%';
+    document.getElementById('heatLabel').textContent='Heat: '+HEAT[seen.size-1];
+    document.getElementById('prev').disabled=cur===0;
+    const n=document.getElementById('next');
+    n.textContent=cur===MODS.length-1?'Back to start':'Next module';
+    try{localStorage.setItem('mod',cur)}catch(e){}
+  }
+  document.getElementById('prev').onclick=()=>{go(cur-1);window.scrollTo({top:0})};
+  document.getElementById('next').onclick=()=>{go(cur===MODS.length-1?0:cur+1);window.scrollTo({top:0})};
+
+  // Values
+  const VALUES=[
+    ["Entrepreneurial","I treat the LMS like a product with owners, a roadmap, and data. I'd look for quick wins in month one, like retiring outdated courses, instead of waiting for a perfect overhaul."],
+    ["Service-minded","My customers are crew members, GMs, field leaders, and Brand Partners. I'd shadow restaurants, ask what slows a shift down, and build training around those answers."],
+    ["Fun","Short, game-like microlearning that crews actually finish: scenario drills, flavor-of-the-week challenges, and recognition for top-performing restaurants."],
+    ["Authentic","Clear, honest reporting on what training moved and what it didn't. I'd share results with operations leaders monthly, including what we're changing next."]
+  ];
+  const flips=document.getElementById('flips');
+  VALUES.forEach(([v,t])=>{const b=document.createElement('button');b.className='flip';b.type='button';b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',v+'. Tap to see how I lead it.');
+    b.innerHTML=`<div class="in"><div class="face front"><span class="eyebrow" style="color:var(--heat)">Wingstop value</span><h3>${v}</h3><span class="hint">Tap to flip</span></div><div class="face back"><strong>How I lead it</strong><span>${t}</span></div></div>`;
+    b.onclick=()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');flips.appendChild(b)});
+
+  // Phases
+  const PHASES=[
+    {d:"30",name:"Listen & learn",pep:1,theme:"Learn the restaurants, the team, and the LMS before changing anything big.",
+     actions:["Hold 1:1s with every member of the Content Development and LMS teams, including contracted support, to learn strengths, workloads, and goals","Meet with the Director of In-Restaurant Training to align on field training priorities, deadlines, and implementation plans","Visit company-owned and Brand Partner restaurants to watch Smart Kitchen shifts and learn where crews get stuck","Audit the LMS: course inventory, owners, completion rates, outdated content, and reporting gaps","Map learning gaps to the restaurant scorecard: speed of service, 10-minute order times, labor and turnover, audit scores"],
+     deliv:["Team assessment and coaching plan","LMS health check with a ranked fix list","Learning gap map tied to restaurant KPIs"],
+     kpis:[["Team 1:1s completed","100%"],["Restaurants visited","6+"],["Courses audited","100%"]],
+     who:"Partners: Director of In-Restaurant Training, Operations, Brand Partners, IT, LMS vendor"},
+    {d:"60",name:"Build & pilot",pep:2,theme:"Fix the foundation and prove one high-impact solution in the field.",
+     actions:["Launch a content governance model: course owners, review cycles, version control, and retirement rules","Build role-based, blended learning paths (eLearning, in-restaurant coaching, and virtual sessions) for crew, shift leaders, GMs, and field leaders, aligned with brand values, service standards, and operating procedures","Pilot Smart Kitchen 10-minute microlearning in a small group of restaurants below target","Create Club Wingstop launch enablement so every crew member can explain and sign up guests","Design a localization workflow for international content: translation glossary, market review, and release steps","Stand up an LMS reporting dashboard that ties completions to restaurant performance","Speed up content development with AI-assisted drafting, AI role-play practice, and AI voiceover, so the team ships more without adding headcount"],
+     deliv:["Governance playbook and LMS best practices guide","Role-based, blended learning paths","Smart Kitchen pilot results","AI-assisted content workflow"],
+     kpis:[["Active courses with an owner","100%"],["Pilot restaurant completion","95%"],["Dashboard live for field leaders","Yes"]],
+     who:"Partners: Operations, Marketing (Club Wingstop), international Brand Partners, HR"},
+    {d:"90",name:"Scale & measure",pep:3,theme:"Scale what worked, show the results, and set the next-year roadmap.",
+     actions:["Roll the Smart Kitchen training out system-wide based on pilot results","Deploy localized core content to a first international market and document the playbook","Report Kirkpatrick Levels 1–4 results to senior leaders, linking training to speed of service and sales","Coach the growth of every team member with individual development plans, and set a continuous improvement cycle for the LMS: quarterly content reviews, learner feedback, and a running fix list","Publish a 12-month learning roadmap with the Director of In-Restaurant Training"],
+     deliv:["System-wide rollout plan","International deployment playbook","12-month L&D roadmap"],
+     kpis:[["Restaurants on the new paths","All domestic"],["Improvement in 10-minute target in pilot","Measured vs. baseline"],["Team development plans","100%"]],
+     who:"Partners: Senior leadership, Operations, IT, LMS vendor, international Brand Partners"}
+  ];
+  const pick=document.getElementById('phasePick'), body=document.getElementById('phaseBody');
+  let checked={}; try{checked=JSON.parse(localStorage.getItem('checks')||'{}')}catch(e){}
+  PHASES.forEach((p,i)=>{const b=document.createElement('button');b.className='phase-btn';b.type='button';b.role='tab';b.id='ph'+i;
+    b.innerHTML=`<b>Day ${p.d}</b><span>${p.name}</span><div class="pep" aria-hidden="true">${[1,2,3].map(n=>`<i class="${n<=p.pep?'on':''}"></i>`).join('')}</div>`;
+    b.onclick=()=>showPhase(i);pick.appendChild(b)});
+  function showPhase(i){
+    [...pick.children].forEach((b,k)=>b.setAttribute('aria-selected',k===i?'true':'false'));
+    const p=PHASES[i];
+    body.innerHTML=`<div class="phase">
+      <div class="panel"><div class="eyebrow" style="color:var(--heat)">First ${p.d} days · ${p.name}</div><p class="theme-line">${p.theme}</p>
+      <h3>Actions</h3><ul class="checks">${p.actions.map((a,k)=>{const id=`c${i}-${k}`;return `<li><label for="${id}"><input type="checkbox" id="${id}" ${checked[id]?'checked':''}><span>${a}</span></label></li>`}).join('')}</ul></div>
+      <div class="panel"><h3>Deliverables</h3><ul class="deliv">${p.deliv.map(d=>`<li>${d}</li>`).join('')}</ul>
+      <h3>Proposed success measures</h3><ul class="kpis">${p.kpis.map(([k,v])=>`<li><span>${k}</span><b>${v}</b></li>`).join('')}</ul>
+      <p class="who">${p.who}</p></div></div>`;
+    body.querySelectorAll('input').forEach(c=>c.onchange=()=>{checked[c.id]=c.checked;try{localStorage.setItem('checks',JSON.stringify(checked))}catch(e){}});
+  }
+  showPhase(0);
+
+  // Scenarios
+  const SCENES=[
+    {q:"Day 20: Half of restaurants are missing the 10-minute Smart Kitchen order target. Operations asks for a new training course by next week. What's your first move?",
+     c:["Build a full Smart Kitchen eLearning course right away and assign it to every crew member","Pull speed-of-service data by restaurant, visit a few below-target kitchens, and find the specific step where orders slow down","Send a reminder email with the existing Smart Kitchen guide attached"],a:1,
+     fb:"Start with the gap, not the course. If the slowdown is one station or one shift handoff, a 3-minute drill at that step will beat a 30-minute course for everyone."},
+    {q:"Day 45: An LMS audit finds 3 versions of the same food safety course live, and restaurants are completing different ones. What do you do?",
+     c:["Leave them all live so nobody loses completion credit","Ask each restaurant which version they prefer","Name one owner, keep the current approved version, map past completions to it, and retire the others under a governance rule"],a:2,
+     fb:"This is content governance in action. One owner, one current version, clear retirement rules, and completions carried over so restaurants aren't penalized for the old mess."},
+    {q:"Day 75: A new international market opens in two months and needs core crew training. What's the plan?",
+     c:["Partner with the Brand Partner in that market to adapt core content using a translation glossary, local review, and a pilot restaurant before full release","Translate every course word for word and upload it","Have the market use the English courses until they build their own"],a:0,
+     fb:"Localization means adapting for language, culture, and local operations, with the Brand Partner as a co-owner. Piloting first catches problems before every restaurant sees them."}
+  ];
+  const scenes=document.getElementById('scenes'); const answered={}; let score=0;
+  SCENES.forEach((s,i)=>{const d=document.createElement('div');d.className='scene';
+    d.innerHTML=`<div class="eyebrow" style="color:var(--heat)">Scenario ${i+1} of ${SCENES.length}</div><p class="q">${s.q}</p><div class="choices">${s.c.map((c,k)=>`<button class="choice" type="button" data-k="${k}"><span class="k">${'ABC'[k]}</span><span>${c}</span></button>`).join('')}</div><p class="fb" hidden></p>`;
+    d.querySelectorAll('.choice').forEach(btn=>btn.onclick=()=>{
+      if(answered[i]!==undefined)return; const k=+btn.dataset.k; answered[i]=k;
+      d.querySelectorAll('.choice').forEach(b=>{const bk=+b.dataset.k;if(bk===s.a)b.classList.add('right');else if(bk===k)b.classList.add('wrong');b.setAttribute('aria-disabled','true')});
+      if(k===s.a)score++;
+      const fb=d.querySelector('.fb');fb.hidden=false;fb.className='fb '+(k===s.a?'good':'meh');
+      fb.innerHTML=(k===s.a?'<b>That\'s my move too.</b> ':'<b>Here\'s how I\'d play it.</b> ')+s.fb;
+      document.getElementById('score').textContent=`Score: ${score} of ${SCENES.length}`;
+    });
+    scenes.appendChild(d)});
+
+  // Copy email
+  document.getElementById('copyEmail').onclick=function(){
+    const t=document.getElementById('email').textContent,b=this;
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('email'));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected, press copy'};
+    try{navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied'},sel)}catch(e){sel()}
+  };
+
+  let start=0; try{start=+(localStorage.getItem('mod')||0)||0}catch(e){}
+  go(location.hash==='#plan'?2:start);
+})();
+</script>
+
+</body></html>
